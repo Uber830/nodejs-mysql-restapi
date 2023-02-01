@@ -1,30 +1,26 @@
+import "dotenv/config";
 import express from "express";
-import { connect } from "./db.js";
-import { PORT } from "./config.js";
+import employeeRoutes from "./routes/employes.routes.js";
+import indexRoutes from "./routes/index.routes.js";
+import morgan from "morgan";
 
 const app = express();
 
-app.get("/", async (req, res) => {
-  const [rows] = await connect.query("SELECT * FROM users");
-  res.json(rows);
+/* setting */
+
+/*middleware  */
+app.use(morgan("dev"));
+app.use(express.json());
+
+/* routes */
+app.use(indexRoutes);
+app.use("/api", employeeRoutes);
+
+/* route for default */
+app.use((req, res, next) => {
+  res.status(404).json({
+    menssage: "Endpoint not found",
+  });
 });
 
-app.get("/ping", async (req, res) => {
-  const [RESULT] = await connect.query(`SELECT "hello world" as RESULT`);
-  res.json(RESULT[0]);
-});
-
-app.get("/create", async (req, res) => {
-  const [ResultSetHeader] = await connect.query(
-    'INSERT INTO users(name) VALUES ("uberman")'
-  );
-  const { insertId, info } = ResultSetHeader;
-  console.log("id " + insertId + " : " + "info " + info);
-  res.json(ResultSetHeader);
-});
-
-app.listen(PORT, () => {
-  console.log(
-    `New app listening on the port ${PORT} \n================================================`
-  );
-});
+export default app;
