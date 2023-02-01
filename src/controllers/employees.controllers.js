@@ -2,7 +2,7 @@ import { poll } from "../db.js";
 
 const getEmployees = async (req, res) => {
   try {
-    const [employee] = await poll.query(`select * from employee`);
+    const [employee] = await poll.query(`SELECT * FROM employee`);
     res.status(202).json(employee);
   } catch (err) {
     return res.status(500).json({ menssage: "Something goes wrong" });
@@ -12,7 +12,7 @@ const getEmployees = async (req, res) => {
 const getEmployeeId = async (req, res) => {
   const { id } = req.params;
   try {
-    const [rows] = await poll.query(`select * from employee where id = (?)`, [
+    const [rows] = await poll.query(`SELECT * FROM employee WHERE id = (?)`, [
       Number(id),
     ]);
 
@@ -66,7 +66,7 @@ const updateEmployee = async (req, res) => {
 const deleteEmployee = async (req, res) => {
   const { id } = req.params;
   try {
-    const [result] = await poll.query(`delete from employee where id = (?)`, [
+    const [result] = await poll.query(`DELETE FROM employee WHERE id = (?)`, [
       Number(id),
     ]);
 
